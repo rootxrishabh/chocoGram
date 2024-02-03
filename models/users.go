@@ -7,7 +7,7 @@ import (
 
 	"github.com/rootxrishabh/chocoGram/config"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var db *gorm.DB
@@ -27,12 +27,15 @@ func init() {
 	db.AutoMigrate(&User{})
 }
 
-func (u *User) CreateUser() (interface{}, error) {
+func (u *User) CreateUser() (string, error) {
+	if u.Username == "" {
+		return "", errors.New("username cannot be empty")
+	}
 	d := db.Create(u)
 	if d.Error != nil {
-		return nil, d.Error
+		return "", d.Error
 	}
-	return d.Value, nil
+	return "{username:" + u.Username + "}", nil
 }
 
 func GetAllFriends(username string) ([]string, bool) {
@@ -73,6 +76,7 @@ func GetAllFriends(username string) ([]string, bool) {
 
 func CreateFriendRequest(usernameA string, usernameB string) (error, bool) {
 	var friendship Friendships
+	var user User
 
 	if usernameA[0] == '$' {
 		usernameA = strings.TrimPrefix(usernameA, "$")
@@ -81,14 +85,14 @@ func CreateFriendRequest(usernameA string, usernameB string) (error, bool) {
 		usernameB = strings.TrimPrefix(usernameB, "$")
 	}
 
-	checkA := db.Where("username = ?", usernameA).First(&User{}).RecordNotFound()
-	if checkA {
+	db.Where("username = ?", usernameA).First(&user)
+	if user.Username != usernameA {
 		return nil, true
 	}
 
 	// Check if usernameB exists
-	checkB := db.Where("username = ?", usernameB).First(&User{}).RecordNotFound()
-	if checkB {
+	db.Where("username = ?", usernameB).First(&user)
+	if user.Username != usernameB {
 		return nil, true
 	}
 

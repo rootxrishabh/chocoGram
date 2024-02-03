@@ -18,7 +18,7 @@ func CreateUser(c *gin.Context) {
 		c.Writer.WriteHeader(400)
 		c.Header("Content-Type", "application/json")
 		c.Writer.Write([]byte(`{	"status": "failure",
- 	"reason": "User already exists"
+ 	"reason": "User already exists or invalid request format"
 }`))
 		return
 	}

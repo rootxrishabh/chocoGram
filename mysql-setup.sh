@@ -1,4 +1,4 @@
-# MySQL Setup
+# MySQL linux Setup
 set -e
 sudo install-packages mysql-server
 sudo mkdir -p /var/run/mysqld /var/log/mysql
