@@ -8,4 +8,4 @@ To install ChocoGram, simply clone the repository and run the following command:
 
 ```bash
 docker-compose up
-`
+```
