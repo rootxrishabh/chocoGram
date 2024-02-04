@@ -24,7 +24,6 @@ type Friendships struct {
 
 func init() {
 	db = config.GetDB()
-	db.AutoMigrate(&User{})
 }
 
 func (u *User) CreateUser() (string, error) {
